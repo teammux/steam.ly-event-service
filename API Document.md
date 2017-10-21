@@ -10,6 +10,25 @@
 | type          | A `string` value used to describe which kind of `Event` it is. Possible value: `user_event`, `publisher_event`, `real_world_event` |
 | content       | A `object` contains all detailed event information, See `Content Protocol`|
 
+### Daily Sales Summary
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| id            | A unique `number` used to identify a `Daily Summary`|
+| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
+| sales         | A `number` value describes a `Game`'s sales of a day |
+| total_profit  | A `number` value describes a `Game`'s total profit of a day |
+| day_number    | A unique `number` identifies a day |
+
+### Daily Click Summary
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| id            | A unique `number` used to identify a `Daily Summary`|
+| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
+| total_clicks  | A `number` value describes a `Game`'s total clicks of a day |
+| day_number    | A unique `number` identifies a day |
+
 ### Content Protocol
 
 #### User Event
@@ -73,7 +92,7 @@
 
 ## Interface
 
-### `GET` EventList
+### `GET` /events
 
 #### Request
 
@@ -92,7 +111,7 @@
 
 ##### request
 
-> **GET** /events?type=user_click&amount=100
+> **GET** /events?type=user_click&amount=2
 
 ##### response
 
@@ -125,7 +144,7 @@
 }
 ```
 
-### `POST` Event
+### `POST` /events
 
 #### Request(JSON)
 
@@ -140,6 +159,8 @@
 ##### request
 
 > **POST** /events
+
+##### request body
 
 ```javascript
 {
@@ -158,4 +179,53 @@
 
 ```javascript
 201 CREATED
+```
+
+### `GET` /dailySummaries
+
+#### Request
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| itemId        | A `number` value identifies which `Game`'s Summary you want |
+| type          | A `string` value describes which kind of `Daily Summary` list you want |
+| amount        | A `number` value describes how many entries you want |
+
+#### Response(JSON)
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| summaries        | A `array` value contains latest `Daily Summary`s which fit the request parameters |
+
+#### Example
+
+##### request
+
+> **GET** /dailySummaries?itemId=2&type=sales&amount=2
+
+##### response
+
+```javascript
+200 OK
+
+{
+  results: [
+    {
+      id: 1,
+      item_id: 2,
+      sales: 233,
+      total_profit: 23333,
+      day: 10
+      }
+    },
+    {
+      id: 2,
+      item_id: 2,
+      sales: 24,
+      total_profit: 2444,
+      day: 9
+      }
+    }
+  ]
+}
 ```
