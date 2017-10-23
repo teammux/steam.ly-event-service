@@ -10,7 +10,7 @@
 | type          | A `string` value used to describe which kind of `Event` it is. Possible value: `user_event`, `publisher_event`, `real_world_event` |
 | content       | A `object` contains all detailed event information, See `Content Protocol`|
 
-### Daily Sales Summary
+<!-- ### Daily Sales Summary
 
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
@@ -18,7 +18,7 @@
 | item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
 | sales         | A `number` value describes a `Game`'s sales of a day |
 | total_profit  | A `number` value describes a `Game`'s total profit of a day |
-| day_number    | A unique `number` identifies a day |
+| day_number    | A unique `number` identifies a day | -->
 
 ### Daily Click Summary
 
@@ -42,7 +42,7 @@
 | item_id       | A unique `number` identifies a `Game` witch `User` click on |
 | created_date  | A `number` value describes the date when the event triggered |
 
-##### Purchase
+<!-- ##### Purchase
 
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
@@ -60,9 +60,9 @@
 | user_id       | A unique `number` identifies a `User` which triggered the event |
 | item_id       | A unique `number` identifies a `Game` witch `User` click played |
 | length        | A `number` value describes how long did the `User` play the `Game` |
-| created_date  | A `number` value describes the date when the event triggered |
+| created_date  | A `number` value describes the date when the event triggered | -->
 
-#### Publisher Event
+<!-- #### Publisher Event
 
 ##### New Game
 
@@ -88,7 +88,7 @@
 | item_id        | A unique `number` identifies a `Game` witch is updated |
 | original_price | A `number` value describes the original price of the `Game` |
 | sale_price     | A `number` value describes the sale price of the `Game` |
-| created_date   | A `number` value describes the date when the event triggered |
+| created_date   | A `number` value describes the date when the event triggered | -->
 
 ## Interface
 
@@ -201,7 +201,7 @@
 
 ##### request
 
-> **GET** /dailySummaries?itemId=2&type=sales&amount=2
+> **GET** /dailySummaries?itemId=2&type=click&amount=2
 
 ##### response
 
@@ -213,16 +213,14 @@
     {
       id: 1,
       item_id: 2,
-      sales: 233,
-      total_profit: 23333,
+      total_clicks: 23333,
       day: 10
       }
     },
     {
       id: 2,
       item_id: 2,
-      sales: 24,
-      total_profit: 2444,
+      total_clicks: 2444,
       day: 9
       }
     }
