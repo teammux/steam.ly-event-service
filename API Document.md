@@ -4,43 +4,18 @@
 
 ### Event
 
+#### User Event
+
+##### User Click Event
+
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
 | id            | A unique `number` used to identify a `Event`|
-| type          | A `string` value used to describe which kind of `Event` it is. Possible value: `user_event`, `publisher_event`, `real_world_event` |
-| content       | A `object` contains all detailed event information, See `Content Protocol`|
-
-<!-- ### Daily Sales Summary
-
-| Parameter     | Description                 |
-| ------------- |:---------------------------:|
-| id            | A unique `number` used to identify a `Daily Summary`|
-| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
-| sales         | A `number` value describes a `Game`'s sales of a day |
-| total_profit  | A `number` value describes a `Game`'s total profit of a day |
-| day_number    | A unique `number` identifies a day | -->
-
-### Daily Click Summary
-
-| Parameter     | Description                 |
-| ------------- |:---------------------------:|
-| id            | A unique `number` used to identify a `Daily Summary`|
-| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
-| total_clicks  | A `number` value describes a `Game`'s total clicks of a day |
-| day_number    | A unique `number` identifies a day |
-
-### Content Protocol
-
-#### User Event
-
-##### Click
-
-| Parameter     | Description                 |
-| ------------- |:---------------------------:|
 | type          | A fixed `string` value will always be **user_click** |
 | user_id       | A unique `number` identifies a `User` which triggered the event |
 | item_id       | A unique `number` identifies a `Game` witch `User` click on |
-| created_date  | A `number` value describes the date when the event triggered |
+| is_recommand  | A `boolean` value describes if the `Game` is a recommanded one |
+| day_number    | A `number` value describes the date when the event triggered |
 
 <!-- ##### Purchase
 
@@ -90,6 +65,28 @@
 | sale_price     | A `number` value describes the sale price of the `Game` |
 | created_date   | A `number` value describes the date when the event triggered | -->
 
+<!-- ### Daily Sales Summary
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| id            | A unique `number` used to identify a `Daily Summary`|
+| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
+| sales         | A `number` value describes a `Game`'s sales of a day |
+| total_profit  | A `number` value describes a `Game`'s total profit of a day |
+| day_number    | A unique `number` identifies a day | -->
+
+### Daily Summary
+
+#### Daily Click Summary
+
+| Parameter     | Description                 |
+| ------------- |:---------------------------:|
+| id            | A unique `number` used to identify a `Daily Summary`|
+| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
+| reco_clicks   | A `number` value describes a recommand `Game`'s total clicks of a day |
+| rand_clicks   | A `number` value describes a random `Game`'s total clicks of a day |
+| day_number    | A unique `number` identifies a day |
+
 ## Interface
 
 ### `GET` /events
@@ -122,23 +119,20 @@
   results: [
     {
       id: 1,
-      type: 'user_event',
-      content: {
-        userId: 1,
-        itemId: 1,
-        type: 'user_click',
-        created_date: 1508527763
-      }
+      userId: 1,
+      itemId: 1,
+      type: 'user_click',
+      is_recommand: false,
+      day_number: 1508527763
     },
     {
       id: 2,
       type: 'user_event',
-      content: {
-        userId: 2,
-        itemId: 2,
-        type:'user_click',
-        created_date: 1508527762
-      }
+      userId: 2,
+      itemId: 2,
+      type: 'user_click',
+      is_recommand: true,
+      day_number: 1508527762
     }
   ]
 }
@@ -165,13 +159,11 @@
 ```javascript
 {
   id: 1,
-  type: 'user_event',
-  content: {
-    userId: 1,
-    itemId: 1,
-    type: 'user_click',
-    created_date: 1508527763
-  }
+  userId: 1,
+  itemId: 1,
+  type: 'user_click',
+  is_recommand: false,
+  day_number: 1508527763
 }
 ```
 
@@ -213,15 +205,17 @@
     {
       id: 1,
       item_id: 2,
-      total_clicks: 23333,
-      day: 10
+      reco_clicks: 33333,
+      rand_clicks: 23333,
+      day_number: 10
       }
     },
     {
       id: 2,
       item_id: 2,
-      total_clicks: 2444,
-      day: 9
+      reco_clicks: 43333,
+      rand_clicks: 33333,
+      day_number: 9
       }
     }
   ]
