@@ -82,10 +82,10 @@
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
 | id            | A unique `number` used to identify a `Daily Summary`|
-| item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about |
 | reco_clicks   | A `number` value describes a recommand `Game`'s total clicks of a day |
 | rand_clicks   | A `number` value describes a random `Game`'s total clicks of a day |
 | day_number    | A unique `number` identifies a day |
+<!-- | item_id       | A unique `number` identifies a `Game` which the `Daily Summary` is talking about | -->
 
 ## Interface
 
@@ -204,7 +204,6 @@
   results: [
     {
       id: 1,
-      item_id: 2,
       reco_clicks: 33333,
       rand_clicks: 23333,
       day_number: 10
@@ -212,7 +211,6 @@
     },
     {
       id: 2,
-      item_id: 2,
       reco_clicks: 43333,
       rand_clicks: 33333,
       day_number: 9
