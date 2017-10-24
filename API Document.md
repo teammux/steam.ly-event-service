@@ -179,7 +179,6 @@
 
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
-| itemId        | A `number` value identifies which `Game`'s Summary you want |
 | type          | A `string` value describes which kind of `Daily Summary` list you want |
 | amount        | A `number` value describes how many entries you want |
 
