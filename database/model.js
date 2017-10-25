@@ -14,13 +14,13 @@ let clickEventCache = [];
 const checkDate = (dateString) => {
   let date = new Date(dateString);
   if (currentTime === undefined) {
-    currentTime = date.getTime() - date.getTime() % 86400 * 1000;
+    currentTime = date.getTime() - date.getTime() % (86400 * 1000);
   } else if (date.getTime() - currentTime > 86400 * 1000) {
     console.log('daily summary generating');
     createDailyClickSummary(clickEventCache)
       .then(result => console.log('daily summary generated'));
     clickEventCache = [];
-    currentTime = date.getTime() - date.getTime() % 86400 * 1000;
+    currentTime = date.getTime() - date.getTime() % (86400 * 1000);
   }
 };
 

@@ -17,7 +17,7 @@ const userClickEventSchema = mongoose.Schema({
   user_id: Number,
   item_id: Number,
   is_recommand: Boolean,
-  day_number: Number
+  date: Date
 });
 const UserClickEvent = mongoose.model('Event', userClickEventSchema);
 
@@ -25,7 +25,7 @@ const dailyClickSummarySchema =  mongoose.Schema({
   item_id: Number,
   reco_clicks: Number,
   rand_clicks: Number,
-  day_number: Number
+  date: Date
 })
 const DailyClickSummary = mongoose.model('DailyClickSummary', dailyClickSummarySchema);
 

@@ -17,15 +17,16 @@ const generateData = () => {
   postData.user_id = Math.floor(seed * seed * 10000);
   postData.item_id = Math.floor(seed * 1000);
   postData.date = date;
+  count++;
   request(options, (err, res, body) => {
-    console.log(postData);
+    console.log(postData, count);
   });
 };
 
 let date = new Date();
 
 const timeGoes = () => {
-  if (count < 200000) {
+  if (count < 10000) {
     setTimeout(() => {
       timeGoes();
     },10);
@@ -33,8 +34,7 @@ const timeGoes = () => {
   generateData();
   generateData();
   generateData();
-  date = new Date(date.getTime() + 300 * 1000);
-  count++;
+  date = new Date(date.getTime() + 100 * 1000);
 };
 
 timeGoes();
