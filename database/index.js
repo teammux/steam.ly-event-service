@@ -14,9 +14,8 @@ db.once('open', function() {
 });
 
 const userClickEventSchema = mongoose.Schema({
-  userId: Number,
-  itemId: Number,
-  type: String,
+  user_id: Number,
+  item_id: Number,
   is_recommand: Boolean,
   day_number: Number
 });

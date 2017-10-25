@@ -7,12 +7,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/events', (req, res) => {
-  console.log(req.body);
   model.createEvent(req.body)
     .then((result) => {
-      console.log(result);
       res.status(201).end();
     })
+});
+
+app.get('/dailySummaries', (req, res) => {
+  console.log(req.query);
 });
 
 app.listen(3000, () => {
