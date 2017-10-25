@@ -1,5 +1,9 @@
 const Promise = require('bluebird');
 const db = require('./index.js');
+const elasticsearch = require('elasticsearch');
+const esclient = new elasticsearch.Client({
+  host: 'localhost:9200'
+});
 
 const EventMap = {
   'user_click': db.UserClickEvent
@@ -16,9 +20,22 @@ const checkDate = (dateString) => {
   if (currentTime === undefined) {
     currentTime = date.getTime() - date.getTime() % (86400 * 1000);
   } else if (date.getTime() - currentTime > 86400 * 1000) {
-    console.log('daily summary generating');
     createDailyClickSummary(clickEventCache)
-      .then(result => console.log('daily summary generated'));
+      .then((result) => {
+        console.log('daily summary generated');
+        esclient.create({
+          id: result.id,
+          index: 'daily_summary',
+          type: 'click',
+          body: {
+            reco_clicks: result.reco_clicks,
+            rand_clicks: result.rand_clicks,
+            date: result.date
+          }
+        }, (error, response) => {
+          console.log(error, response);
+        })
+      });
     clickEventCache = [];
     currentTime = date.getTime() - date.getTime() % (86400 * 1000);
   }

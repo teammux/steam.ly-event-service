@@ -19,17 +19,19 @@ const generateData = () => {
   postData.date = date;
   count++;
   request(options, (err, res, body) => {
-    console.log(postData, count);
+    // console.log(postData, count);
   });
 };
 
 let date = new Date();
 
 const timeGoes = () => {
-  if (count < 10000) {
+  if (count < 100000) {
     setTimeout(() => {
       timeGoes();
-    },10);
+    },1);
+  } else {
+    console.log('complete');
   }
   generateData();
   generateData();

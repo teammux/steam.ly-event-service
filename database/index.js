@@ -22,7 +22,6 @@ const userClickEventSchema = mongoose.Schema({
 const UserClickEvent = mongoose.model('Event', userClickEventSchema);
 
 const dailyClickSummarySchema =  mongoose.Schema({
-  item_id: Number,
   reco_clicks: Number,
   rand_clicks: Number,
   date: Date
