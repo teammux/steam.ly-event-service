@@ -31,7 +31,14 @@ app.post('/events', (req, res) => {
 });
 
 app.get('/dailySummaries', (req, res) => {
-  console.log(req.query);
+  if (req.query.type && req.query.amount) {
+    model.findDailySummary(req.query)
+      .then((reuslts) => {
+        res.status(200).json(reuslts);
+      })
+  } else {
+    res.status(400).end();
+  }
 });
 
 app.listen(3000, () => {

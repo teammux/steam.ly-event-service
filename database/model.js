@@ -33,7 +33,7 @@ const checkDate = (dateString) => {
             date: result.date
           }
         }, (error, response) => {
-          console.log(error, response);
+          // console.log(error, response);
         })
       });
     clickEventCache = [];
@@ -77,10 +77,10 @@ const findOrCreateDailyClickSummary = (dayNumber) => {
 };
 
 const findDailySummary = (options) => {
-  return DailySummaryMap[options.type].find().limit(options.amount);
+  return DailySummaryMap[options.type].find().sort({ date: -1 }).limit(parseInt(options.amount));
 };
 
 module.exports = {
-  createEvent: createEvent,
-  findOrCreateDailyClickSummary: findOrCreateDailyClickSummary
+  createEvent,
+  findDailySummary
 };
