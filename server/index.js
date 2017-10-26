@@ -20,7 +20,7 @@ app.post('/events', (req, res) => {
         body: {
           user_id: result.user_id,
           item_id: result.item_id,
-          is_recommand: result.is_recommended,
+          is_recommended: result.is_recommended,
           date: result.date
         }
       }, (error, response) => {
