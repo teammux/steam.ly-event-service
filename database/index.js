@@ -16,7 +16,7 @@ db.once('open', function() {
 const userClickEventSchema = mongoose.Schema({
   user_id: Number,
   item_id: Number,
-  is_recommand: Boolean,
+  is_recommended: Boolean,
   date: Date
 });
 const UserClickEvent = mongoose.model('Event', userClickEventSchema);

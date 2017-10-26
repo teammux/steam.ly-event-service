@@ -4,6 +4,7 @@ const elasticsearch = require('elasticsearch');
 const esclient = new elasticsearch.Client({
   host: 'localhost:9200'
 });
+const MillionsecondsPerDay = 86400 * 1000;
 
 const EventMap = {
   'user_click': db.UserClickEvent
@@ -18,8 +19,8 @@ let clickEventCache = [];
 const checkDate = (dateString) => {
   let date = new Date(dateString);
   if (currentTime === undefined) {
-    currentTime = date.getTime() - date.getTime() % (86400 * 1000);
-  } else if (date.getTime() - currentTime > 86400 * 1000) {
+    currentTime = date.getTime() - date.getTime() % MillionsecondsPerDay;
+  } else if (date.getTime() - currentTime > MillionsecondsPerDay) {
     createDailyClickSummary(clickEventCache)
       .then((result) => {
         console.log('daily summary generated');
@@ -37,7 +38,7 @@ const checkDate = (dateString) => {
         })
       });
     clickEventCache = [];
-    currentTime = date.getTime() - date.getTime() % (86400 * 1000);
+    currentTime = date.getTime() - date.getTime() % MillionsecondsPerDay;
   }
 };
 
@@ -54,7 +55,7 @@ const createDailyClickSummary = (events) => {
   let recoCount = 0;
   let randCount = 0;
   for (let event of events) {
-    if (event.is_recommand) {
+    if (event.is_recommended) {
       recoCount++;
     } else {
       randCount++;
@@ -62,18 +63,6 @@ const createDailyClickSummary = (events) => {
   }
   let newSummary = new db.DailyClickSummary({ reco_clicks: recoCount, rand_clicks: randCount, date: events[0].date });
   return newSummary.save();
-};
-
-const findOrCreateDailyClickSummary = (dayNumber) => {
-  return db.DailyClickSummary.findOne({ day_number: dayNumber })
-    .then((result) => {
-      if (result === null) {
-        return db.UserClickEvent.find({ day_number: dayNumber })
-      }
-    })
-    .then((results) => {
-      return createDailyClickSummary(results);
-    })
 };
 
 const findDailySummary = (options) => {

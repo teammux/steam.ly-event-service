@@ -1,5 +1,6 @@
 const request = require('request');
 
+const TargetCount = 100000;
 let count = 0;
 
 let postData = { type: 'user_click' };
@@ -13,7 +14,7 @@ let options = {
 
 const generateData = () => {
   let seed = Math.random();
-  postData.is_recommand = seed >= 0.3 ? true : false;
+  postData.is_recommanded = seed >= 0.3 ? true : false;
   postData.user_id = Math.floor(seed * seed * 10000);
   postData.item_id = Math.floor(seed * 1000);
   postData.date = date;
@@ -26,7 +27,7 @@ const generateData = () => {
 let date = new Date();
 
 const timeGoes = () => {
-  if (count < 100000) {
+  if (count < TargetCount) {
     setTimeout(() => {
       timeGoes();
     },1);
