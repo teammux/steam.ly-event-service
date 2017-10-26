@@ -14,7 +14,7 @@ let options = {
 
 const generateData = () => {
   let seed = Math.random();
-  postData.is_recommanded = seed >= 0.3 ? true : false;
+  postData.is_recommended = seed >= 0.3 ? true : false;
   postData.user_id = Math.floor(seed * seed * 10000);
   postData.item_id = Math.floor(seed * 1000);
   postData.date = date;
