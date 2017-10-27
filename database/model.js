@@ -1,9 +1,6 @@
 const Promise = require('bluebird');
 const db = require('./index.js');
-const elasticsearch = require('elasticsearch');
-const esclient = new elasticsearch.Client({
-  host: 'localhost:9200'
-});
+const elasticSearch = require('../elasticSearch/index.js');
 const MillionsecondsPerDay = 86400 * 1000;
 
 const EventMap = {
@@ -23,19 +20,8 @@ const checkDate = (dateString) => {
   } else if (date.getTime() - currentTime > MillionsecondsPerDay) {
     createDailyClickSummary(clickEventCache)
       .then((result) => {
+        elasticSearch.createDailySummary(result);
         console.log('daily summary generated');
-        esclient.create({
-          id: result.id,
-          index: 'daily_summary',
-          type: 'click',
-          body: {
-            reco_clicks: result.reco_clicks,
-            rand_clicks: result.rand_clicks,
-            date: result.date
-          }
-        }, (error, response) => {
-          // console.log(error, response);
-        })
       });
     clickEventCache = [];
     currentTime = date.getTime() - date.getTime() % MillionsecondsPerDay;
