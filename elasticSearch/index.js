@@ -3,20 +3,28 @@ const esclient = new elasticsearch.Client({
   host: 'localhost:9200'
 });
 
-const createEvent = (event) => {
-  esclient.create({
-    id: event.id,
-    index: 'event',
-    type: 'user_click',
-    body: {
+const createEvents = (events) => {
+  let bulkBody = [];
+  for (let event of events) {
+    bulkBody.push({ 
+      index: {
+        _id: event.id,
+        _index: 'event',
+        _type: 'user_click'
+      }
+    });
+    bulkBody.push({
       user_id: event.user_id,
       item_id: event.item_id,
       is_recommended: event.is_recommended,
       date: event.date
-    }
-  }, (error, response) => {
-    // console.log(error, response);
-  })
+    });
+  }
+  esclient.bulk({ body: bulkBody })
+    .then((response) => { 
+      // console.log(response)
+    })
+    .catch(err => console.log(err));
 };
 
 const createDailySummary = (dailySummary) => {
@@ -51,7 +59,7 @@ const createPerformanceData = (options) => {
 };
 
 module.exports = {
-  createEvent,
+  createEvents,
   createDailySummary,
   createPerformanceData
 }
