@@ -34,7 +34,24 @@ const createDailySummary = (dailySummary) => {
   })
 };
 
+let performanceDataId = 0;
+const createPerformanceData = (options) => {
+  esclient.create({
+    id: performanceDataId,
+    index: 'performance_data',
+    type: options.type,
+    body: {
+      time_used: Math.round((options.hrtime[0]*1000) + (options.hrtime[1]/1000000)),
+      date: options.date
+    }
+  }, (error, response) => {
+    // console.log(error, response);
+  })
+  performanceDataId++;
+};
+
 module.exports = {
   createEvent,
-  createDailySummary
+  createDailySummary,
+  createPerformanceData
 }

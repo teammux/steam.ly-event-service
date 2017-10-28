@@ -1,6 +1,6 @@
 const request = require('request');
 
-const TargetCount = 100000;
+const TargetCount = 1000000;
 let count = 0;
 
 let postData = { type: 'user_click' };
@@ -30,7 +30,7 @@ const timeGoes = () => {
   if (count < TargetCount) {
     setTimeout(() => {
       timeGoes();
-    },1);
+    },0);
   } else {
     console.log('complete');
   }

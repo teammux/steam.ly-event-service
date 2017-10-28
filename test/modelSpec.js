@@ -4,7 +4,7 @@ const model = require('../database/model.js');
 describe('model', function() {
   describe('dateCheck', function() {
 
-    it('true', function() {
+    it('should correctly shift date', function() {
       assert.equal(1,1);
     });
 

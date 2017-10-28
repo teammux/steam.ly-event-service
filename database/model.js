@@ -18,12 +18,7 @@ const checkDate = (dateString) => {
   if (currentTime === undefined) {
     currentTime = date.getTime() - date.getTime() % MillionsecondsPerDay;
   } else if (date.getTime() - currentTime > MillionsecondsPerDay) {
-    createDailyClickSummary(clickEventCache)
-      .then((result) => {
-        elasticSearch.createDailySummary(result);
-        console.log('daily summary generated');
-      });
-    clickEventCache = [];
+    createDailySummary();
     currentTime = date.getTime() - date.getTime() % MillionsecondsPerDay;
   }
 };
@@ -37,7 +32,14 @@ const createEvent = (event) => {
   return newEvent.save();
 };
 
+const createDailySummary = () => {
+  createDailyClickSummary(clickEventCache);
+    
+  clickEventCache = [];
+};
+
 const createDailyClickSummary = (events) => {
+  let start = process.hrtime();
   let recoCount = 0;
   let randCount = 0;
   for (let event of events) {
@@ -48,7 +50,12 @@ const createDailyClickSummary = (events) => {
     }
   }
   let newSummary = new db.DailyClickSummary({ reco_clicks: recoCount, rand_clicks: randCount, date: events[0].date });
-  return newSummary.save();
+  newSummary.save()
+    .then((result) => {
+      elasticSearch.createDailySummary(result);
+      elasticSearch.createPerformanceData({ type: 'daily_click_summary', hrtime: process.hrtime(start), date: result.date });
+      console.log('daily summary generated');
+    });
 };
 
 const findDailySummary = (options) => {
