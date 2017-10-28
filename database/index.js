@@ -16,13 +16,12 @@ db.once('open', function() {
 const userClickEventSchema = mongoose.Schema({
   user_id: Number,
   item_id: Number,
-  is_recommand: Boolean,
+  is_recommended: Boolean,
   date: Date
 });
 const UserClickEvent = mongoose.model('Event', userClickEventSchema);
 
 const dailyClickSummarySchema =  mongoose.Schema({
-  item_id: Number,
   reco_clicks: Number,
   rand_clicks: Number,
   date: Date

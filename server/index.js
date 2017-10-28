@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const model = require('../database/model.js')
 const bodyParser = require('body-parser');
+const elasticSearch = require('../elasticSearch/index.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -9,12 +10,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.post('/events', (req, res) => {
   model.createEvent(req.body)
     .then((result) => {
+      elasticSearch.createEvent(result);
       res.status(201).end();
     })
 });
 
 app.get('/dailySummaries', (req, res) => {
-  console.log(req.query);
+  if (req.query.type && req.query.amount) {
+    model.findDailySummary(req.query)
+      .then((reuslts) => {
+        res.status(200).json(reuslts);
+      })
+  } else {
+    res.status(400).end();
+  }
 });
 
 app.listen(3000, () => {
