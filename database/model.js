@@ -7,14 +7,13 @@ const EventMap = {
   'user_click': db.UserClickEvent
 };
 
-let clickEventCache = [];
 const EventCacheMap = {
-  'user_click': clickEventCache
-}
+  'user_click': []
+};
 
 const DailySummaryMap = {
   'click': db.DailyClickSummary
-}
+};
 
 let currentTime;
 const checkDate = (dateString) => {
@@ -39,8 +38,10 @@ const createEvents = (events) => {
 };
 
 const createDailySummary = () => {
-  createDailyClickSummary(clickEventCache);
-  clickEventCache = [];
+  for (let eventType of Object.keys(DailySummaryGeneratorMAp)) {
+    DailySummaryGeneratorMAp[eventType](EventCacheMap[eventType]);
+    EventCacheMap[eventType] = [];
+  }
 };
 
 const createDailyClickSummary = (events) => {
@@ -62,6 +63,10 @@ const createDailyClickSummary = (events) => {
       console.log('daily summary generated');
     })
     .catch(err => console.log(err));
+};
+
+const DailySummaryGeneratorMAp = {
+  'user_click': createDailyClickSummary
 };
 
 const findDailySummary = (options) => {
