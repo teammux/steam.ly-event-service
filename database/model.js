@@ -7,12 +7,16 @@ const EventMap = {
   'user_click': db.UserClickEvent
 };
 
+let clickEventCache = [];
+const EventCacheMap = {
+  'user_click': clickEventCache
+}
+
 const DailySummaryMap = {
   'click': db.DailyClickSummary
 }
 
 let currentTime;
-let clickEventCache = [];
 const checkDate = (dateString) => {
   let date = new Date(dateString);
   if (currentTime === undefined) {
@@ -23,18 +27,19 @@ const checkDate = (dateString) => {
   }
 };
 
-const createEvent = (event) => {
-  let newEvent = new EventMap[event.type](event);
-  if (event.type === 'user_click') {
-    clickEventCache.push(event);
+const createEvents = (events) => {
+  let promises = [];
+  for (let event of events) {
+    EventCacheMap[event.type].push(event);
+    checkDate(event.date);
+    let newEvent = new EventMap[event.type](event);
+    promises.push(newEvent.save());
   }
-  checkDate(event.date);
-  return newEvent.save();
+  return Promise.all(promises);
 };
 
 const createDailySummary = () => {
   createDailyClickSummary(clickEventCache);
-    
   clickEventCache = [];
 };
 
@@ -55,7 +60,8 @@ const createDailyClickSummary = (events) => {
       elasticSearch.createDailySummary(result);
       elasticSearch.createPerformanceData({ type: 'daily_click_summary', hrtime: process.hrtime(start), date: result.date });
       console.log('daily summary generated');
-    });
+    })
+    .catch(err => console.log(err));
 };
 
 const findDailySummary = (options) => {
@@ -63,6 +69,6 @@ const findDailySummary = (options) => {
 };
 
 module.exports = {
-  createEvent,
+  createEvents,
   findDailySummary
 };

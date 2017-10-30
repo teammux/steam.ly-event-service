@@ -8,11 +8,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/events', (req, res) => {
-  model.createEvent(req.body)
-    .then((result) => {
-      elasticSearch.createEvent(result);
+  model.createEvents(req.body)
+    .then((results) => {
+      elasticSearch.createEvents(results);
       res.status(201).end();
     })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 app.get('/dailySummaries', (req, res) => {
