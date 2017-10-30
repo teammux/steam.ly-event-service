@@ -21,13 +21,13 @@ const generateData = () => {
   postData.item_id = Math.floor(seed * 1000);
   postData.date = date;
   count++;
-  date = new Date(date.getTime() + 100 * 1000);
+  date = new Date(date.getTime() + 100 * 1000);// add 100 seconds(100 * 1000 ms) per time
   stash.push(postData);
 };
 
 let date = new Date();
 
-const timeGose = () => {
+const timeGoes = () => {
   let start = process.hrtime();
   while (count < TargetCount) {
     generateData();
@@ -45,4 +45,4 @@ const timeGose = () => {
   // process.exit()
 };
 
-timeGose();
+timeGoes();
