@@ -4,8 +4,6 @@ const log = require('single-line-log').stdout;
 const TargetCount = 1000000;
 let count = 0;
 
-let postData = { type: 'user_click' };
-
 let stash = [];
 
 let options = {
@@ -16,6 +14,7 @@ let options = {
 
 const generateData = () => {
   let seed = Math.random();
+  let postData = { type: 'user_click' };
   postData.is_recommended = seed >= 0.3 ? true : false;
   postData.user_id = Math.floor(seed * seed * 10000);
   postData.item_id = Math.floor(seed * 1000);
@@ -30,6 +29,10 @@ let start = process.hrtime();
 
 const timeGoes = () => {
   generateData();
+  generateData();
+  generateData();
+  generateData();
+  generateData();
   log(`progress: ${count}/${TargetCount}`);
   if (stash.length >= 100) {
     request.post(options, (err, res, body) => {
@@ -40,7 +43,7 @@ const timeGoes = () => {
   if (count < TargetCount) {
     setTimeout(() => {
       timeGoes()
-    }, 1)
+    }, 0);
   } else {
     log(`complete ${TargetCount} rows `)
     let finish = process.hrtime(start);
