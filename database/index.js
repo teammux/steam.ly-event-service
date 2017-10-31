@@ -1,8 +1,11 @@
 const Promise = require('bluebird');
 const _ = require('lodash');
 const mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 
-mongoose.connect('mongodb://localhost/steamly');
+mongoose.connect('mongodb://localhost/steamly', {
+  useMongoClient: true
+});
 const db = mongoose.connection;
 
 db.on('error', function() {
