@@ -28,15 +28,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/events', (req, res) => {
-  process.send(req.body);
-  model.createEvents(req.body)
-    .then((results) => {
-      elasticSearch.createEvents(results);
-      res.status(201).end();
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+  if (typeof(req.body) === 'array') {
+    process.send(req.body);
+    model.createEvents(req.body)
+      .then((results) => {
+        elasticSearch.createEvents(results);
+        res.status(201).end();
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  } else {
+    res.status(400).end();
+  }
 });
 
 app.get('/dailySummaries', (req, res) => {
