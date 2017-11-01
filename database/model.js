@@ -33,8 +33,9 @@ const fillEventCache = (events) => {
   }
 }
 
-const createEvents = (events) => {
+const createEvents = (events, workerId) => {
   elasticSearch.createEvents(events);
+  elasticSearch.createPerformanceData({ type: 'worker_workload', worker_id: workerId, date: events[0].date });
   return EventMap[events[0].type].insertMany(events);
 };
 
@@ -60,7 +61,9 @@ const createDailyClickSummary = (events) => {
   newSummary.save()
     .then((result) => {
       elasticSearch.createDailySummary(result);
-      elasticSearch.createPerformanceData({ type: 'daily_click_summary', hrtime: process.hrtime(start), date: result.date });
+      let finish = process.hrtime(start);
+      let timeUsed = Math.round((finish[0]*1000) + (finish[1]/1000000));
+      elasticSearch.createPerformanceData({ type: 'daily_click_summary', time_used: timeUsed, date: new Date(currentTime) });
       console.log(`daily summary generated for ${result.date}`);
     })
     .catch(err => console.log(err));

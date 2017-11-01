@@ -32,6 +32,9 @@ const timeGoes = () => {
   generateData();
   generateData();
   generateData();
+  generateData();
+  generateData();
+  generateData();
   log(`progress: ${count}/${TargetCount}`);
   if (stash.length >= 100) {
     let options = {

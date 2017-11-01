@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.post('/events', (req, res) => {
   if (Array.isArray(req.body)) {
     process.send(req.body);
-    model.createEvents(req.body)
+    model.createEvents(req.body, cluster.worker.id)
       .then((results) => {
         res.status(201).end();
       })
