@@ -44,8 +44,8 @@ const createDailySummary = (dailySummary) => {
 
 let performanceDataId = 0;
 const createPerformanceData = (options) => {
-  esclient.create({
-    id: performanceDataId,
+  esclient.index({
+    // id: performanceDataId,
     index: 'performance_data',
     type: options.type,
     body: {

@@ -1,8 +1,23 @@
 const express = require('express');
-const app = express();
 const model = require('../database/model.js')
 const bodyParser = require('body-parser');
 const elasticSearch = require('../elasticSearch/index.js');
+const cluster = require('cluster');
+const os = require('os');
+
+if (cluster.isMaster) {
+  for (let i = 0; i < os.cpus().length; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', () => {
+    cluster.fork();
+  })
+
+  return;
+}
+
+const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
