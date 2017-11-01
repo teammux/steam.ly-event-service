@@ -7,7 +7,7 @@ mongoose.connect('mongodb://localhost/steamly', {
   useMongoClient: true
 });
 const db = mongoose.connection;
-describe('databse', function() {
+describe('database', function() {
 
   before( function() {
     db.collections['events'].drop();
