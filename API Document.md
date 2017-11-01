@@ -193,7 +193,7 @@
 
 ##### request
 
-> **GET** /dailySummaries?itemId=2&type=click&amount=2
+> **GET** /dailySummaries?type=click&amount=2
 
 ##### response
 
@@ -206,7 +206,7 @@
       id: 1,
       reco_clicks: 33333,
       rand_clicks: 23333,
-      date: "Fri Mar 01 2013 01:10:00 GMT-0800 (PST)"
+      date: "Fri Mar 02 2013 01:10:00 GMT-0800 (PST)"
       }
     },
     {
