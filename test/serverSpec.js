@@ -1,9 +1,9 @@
 const assert = require('assert');
 const request = require('request');
 
-describe('databse', () => {
+describe('databse', function() {
   
-  it('should handle post event correctly', () => {
+  it('should handle post event correctly', function(done) {
     let options = {
       url: 'http://localhost:3000/events',
       body: [{
@@ -15,11 +15,11 @@ describe('databse', () => {
       }],
       json: true
     }
-    request.post(options, (err, res, body) => {
+    request.post(options, function(err, res, body) {
       if (res.statusCode === 201) {
-        assert(true);
+        done();
       } else {
-        assert(false);
+        done(res.statusCode);
       }
     });
   });

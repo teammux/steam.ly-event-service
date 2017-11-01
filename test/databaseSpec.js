@@ -9,15 +9,15 @@ mongoose.connect('mongodb://localhost/steamly', {
 const db = mongoose.connection;
 describe('databse', function() {
 
-  before(() => {
+  before( function() {
     db.collections['events'].drop();
   });
 
-  after(() => {
+  after( function() {
     db.collections['events'].drop();
   });
 
-  it('should insert 1 event correctly', function() {
+  it('should insert 1 event correctly', function(done) {
     model.createEvents([{
       type: 'user_click',
       item_id: 1,
@@ -25,15 +25,15 @@ describe('databse', function() {
       is_recommended: false,
       date: new Date()
     }])
-      .then(() => {
-        assert(true);
+      .then(function() {
+        done();
       })
-      .catch(() => {
-        assert(false);
+      .catch(function(err) {
+        done(err);
       })
   });
 
-  it('should insert 5 events correctly', function() {
+  it('should insert 5 events correctly', function(done) {
     model.createEvents([
       { type: 'user_click', item_id: 1, user_id: 1, is_recommended: false, date: new Date() },
       { type: 'user_click', item_id: 1, user_id: 1, is_recommended: false, date: new Date() },
@@ -41,11 +41,12 @@ describe('databse', function() {
       { type: 'user_click', item_id: 1, user_id: 1, is_recommended: false, date: new Date() },
       { type: 'user_click', item_id: 1, user_id: 1, is_recommended: false, date: new Date() }
     ])
-      .then((results) => {
-        assert(results.length === 5);
+      .then(function(results) {
+        assert.equal(results.length, 5);
+        done();
       })
-      .catch(() => {
-        assert(false);
+      .catch(function(err) {
+        done(err);
       })
   });
 

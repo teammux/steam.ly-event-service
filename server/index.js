@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/events', (req, res) => {
-  if (typeof(req.body) === 'array') {
+  if (Array.isArray(req.body)) {
     process.send(req.body);
     model.createEvents(req.body)
       .then((results) => {
