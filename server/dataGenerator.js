@@ -38,7 +38,7 @@ const timeGoes = () => {
       json: true
     }
     request.post(options, (err, res, body) => {
-      // console.log(err);
+      // console.log(res.statusCode);
     });
     stash = [];
   }
