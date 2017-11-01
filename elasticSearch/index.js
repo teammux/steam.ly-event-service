@@ -22,7 +22,7 @@ const createEvents = (events) => {
   }
   esclient.bulk({ body: bulkBody })
     .then((response) => { 
-      // console.log(response)
+      // console.log(response);
     })
     .catch(err => console.log(err));
 };

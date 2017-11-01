@@ -50,6 +50,8 @@ app.get('/dailySummaries', (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log(`listening to port ${3000} on worker${process.pid}`);
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`listening to port ${port} on worker${process.pid}`);
 });
