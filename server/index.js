@@ -6,8 +6,13 @@ const cluster = require('cluster');
 const os = require('os');
 
 if (cluster.isMaster) {
+  console.log(`Master ${process.pid} is running`);
   for (let i = 0; i < os.cpus().length; i++) {
-    cluster.fork();
+    var worker = cluster.fork();
+    
+    worker.on('message', function(message) {
+      model.fillEventCache(message);
+    });
   }
 
   cluster.on('exit', () => {
@@ -23,6 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.post('/events', (req, res) => {
+  process.send(req.body);
   model.createEvents(req.body)
     .then((results) => {
       elasticSearch.createEvents(results);
@@ -45,5 +51,5 @@ app.get('/dailySummaries', (req, res) => {
 });
 
 app.listen(3000, () => {
-  console.log('listening to port ', 3000);
+  console.log(`listening to port ${3000} on worker${process.pid}`);
 });

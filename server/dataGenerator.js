@@ -3,28 +3,26 @@ const log = require('single-line-log').stdout;
 
 const TargetCount = 1000000;
 let count = 0;
-
+let userId = 0;
+let itemId = 0;
 let stash = [];
-
-let options = {
-  url: 'http://localhost:3000/events',
-  body: stash,
-  json: true
-}
+let date = new Date();
 
 const generateData = () => {
   let seed = Math.random();
   let postData = { type: 'user_click' };
   postData.is_recommended = seed >= 0.3 ? true : false;
-  postData.user_id = Math.floor(seed * seed * 10000);
-  postData.item_id = Math.floor(seed * 1000);
+  postData.user_id = userId;
+  postData.item_id = itemId;
   postData.date = date;
   count++;
-  date = new Date(date.getTime() + 100 * 1000);// add 100 seconds, make time goes
+  userId++;
+  itemId++;
+  log(`${date}`)
+  date = new Date(date.getTime() + 80 * 1000);// add 80 seconds, make time goes
   stash.push(postData);
 };
 
-let date = new Date();
 let start = process.hrtime();
 
 const timeGoes = () => {
@@ -35,6 +33,11 @@ const timeGoes = () => {
   generateData();
   log(`progress: ${count}/${TargetCount}`);
   if (stash.length >= 100) {
+    let options = {
+      url: 'http://localhost:3000/events',
+      body: stash,
+      json: true
+    }
     request.post(options, (err, res, body) => {
       // console.log(err);
     });

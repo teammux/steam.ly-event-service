@@ -26,16 +26,15 @@ const checkDate = (dateString) => {
   }
 };
 
+const fillEventCache = (events) => {
+  for (let event of events) {
+    EventCacheMap[event.type].push(event);
+    checkDate(event.date);
+  }
+}
+
 const createEvents = (events) => {
-  // let promises = [];
-  // for (let event of events) {
-    // EventCacheMap[event.type].push(event);
-    // checkDate(event.date);
-  //   let newEvent = new EventMap[event.type](event);
-  //   promises.push(newEvent.save());
-  // }
-  return EventMap[events[0].type].insertMany(events)
-  // return Promise.all(promises);
+  return EventMap[events[0].type].insertMany(events);
 };
 
 const createDailySummary = () => {
@@ -76,5 +75,6 @@ const findDailySummary = (options) => {
 
 module.exports = {
   createEvents,
+  fillEventCache,
   findDailySummary
 };
