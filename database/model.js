@@ -34,6 +34,7 @@ const fillEventCache = (events) => {
 }
 
 const createEvents = (events) => {
+  elasticSearch.createEvents(events);
   return EventMap[events[0].type].insertMany(events);
 };
 

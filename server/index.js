@@ -1,7 +1,6 @@
 const express = require('express');
 const model = require('../database/model.js')
 const bodyParser = require('body-parser');
-const elasticSearch = require('../elasticSearch/index.js');
 const cluster = require('cluster');
 const os = require('os');
 
@@ -32,7 +31,6 @@ app.post('/events', (req, res) => {
     process.send(req.body);
     model.createEvents(req.body)
       .then((results) => {
-        elasticSearch.createEvents(results);
         res.status(201).end();
       })
       .catch((err) => {
