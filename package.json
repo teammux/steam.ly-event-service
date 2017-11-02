@@ -22,11 +22,12 @@
     "body-parser": "^1.18.2",
     "express": "^4.15.5",
     "request": "^2.83.0",
-    "webpack": "^3.6.0",
     "mongoose": "^4.8.6",
     "elasticsearch": "^13.3.1",
     "mocha": "^4.0.1",
-    "single-line-log": "^1.1.2"
+    "single-line-log": "^1.1.2",
+    "sqs-consumer": "^3.8.0",
+    "dotenv": "~4.0.0"
   },
   "devDependencies": {
     "eslint-config-hackreactor": "git://github.com/reactorcore/eslint-config-hackreactor",

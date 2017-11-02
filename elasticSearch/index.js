@@ -1,6 +1,7 @@
 const elasticsearch = require('elasticsearch');
+require('dotenv').config({path: '.env.dev'});
 const esclient = new elasticsearch.Client({
-  host: 'localhost:9200'
+  host: process.env.ELASTICSEARCH_HOST
 });
 
 const ENABLE_ELASTIC_SEARCH = true;
