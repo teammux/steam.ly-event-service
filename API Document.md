@@ -144,11 +144,7 @@
 
 | Parameter     | Description                 |
 | ------------- |:---------------------------:|
-| type          | A fixed `string` value will always be **user_click** |
-| user_id       | A unique `number` identifies a `User` which triggered the event |
-| item_id       | A unique `number` identifies a `Game` witch `User` click on |
-| is_recommand  | A `boolean` value describes if the `Game` is a recommanded one |
-| date          | A `string` value describes the date when the event triggered in `Javascript Date format` |
+| events        | A `array` value contains `Event`s need to be posted |
 
 #### Example
 
@@ -160,11 +156,22 @@
 
 ```javascript
 {
-  userId: 1,
-  itemId: 1,
-  type: "user_click",
-  is_recommand: false,
-  date: "Fri Mar 01 2013 01:10:00 GMT-0800 (PST)"
+  "events": [
+    {
+      "user_id": 1,
+      "item_id": 1,
+      "type": "user_click",
+      "is_recommand": false,
+      "date": "Fri Mar 01 2013 01:10:00 GMT-0800 (PST)"
+    },
+    {
+      "user_id": 2,
+      "item_id": 2,
+      "type": "user_click",
+      "is_recommand": false,
+      "date": "Fri Mar 01 2013 01:10:00 GMT-0800 (PST)"
+    }
+  ]
 }
 ```
 
