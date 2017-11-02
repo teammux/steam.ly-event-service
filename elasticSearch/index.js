@@ -3,31 +3,35 @@ const esclient = new elasticsearch.Client({
   host: 'localhost:9200'
 });
 
+const ENABLE_ELASTIC_SEARCH = true;
+const ELASTIC_SEARCH_BULK_THRESHOLD = 5000 * 2;// 1 doc takes 2 position
+
+const EventCacheMap = {
+  'user_click': []
+};
 const createEvents = (events) => {
-  let bulkBody = [];
+  if (!ENABLE_ELASTIC_SEARCH) { return }
   for (let event of events) {
-    bulkBody.push({ 
+    EventCacheMap[event.type].push({ 
       index: {
-        _id: event.id,
         _index: 'event',
-        _type: 'user_click'
+        _type: event.type
       }
     });
-    bulkBody.push({
-      user_id: event.user_id,
-      item_id: event.item_id,
-      is_recommended: event.is_recommended,
-      date: event.date
-    });
+    EventCacheMap[event.type].push(event);
+    if (EventCacheMap[event.type].length >= ELASTIC_SEARCH_BULK_THRESHOLD) {
+      esclient.bulk({ body: EventCacheMap[event.type] })
+        .then((response) => { 
+          // console.log(response);
+        })
+        .catch(err => console.log(err));
+      EventCacheMap[event.type] = [];
+    }
   }
-  esclient.bulk({ body: bulkBody })
-    .then((response) => { 
-      // console.log(response);
-    })
-    .catch(err => console.log(err));
 };
 
 const createDailySummary = (dailySummary) => {
+  if (!ENABLE_ELASTIC_SEARCH) { return }
   esclient.create({
     id: dailySummary.id,
     index: 'daily_summary',
@@ -42,20 +46,15 @@ const createDailySummary = (dailySummary) => {
   })
 };
 
-let performanceDataId = 0;
 const createPerformanceData = (options) => {
+  if (!ENABLE_ELASTIC_SEARCH) { return }
   esclient.index({
-    // id: performanceDataId,
     index: 'performance_data',
     type: options.type,
-    body: {
-      time_used: Math.round((options.hrtime[0]*1000) + (options.hrtime[1]/1000000)),
-      date: options.date
-    }
+    body: options
   }, (error, response) => {
     // console.log(error, response);
   })
-  performanceDataId++;
 };
 
 module.exports = {

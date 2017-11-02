@@ -1,7 +1,6 @@
 const express = require('express');
 const model = require('../database/model.js')
 const bodyParser = require('body-parser');
-const elasticSearch = require('../elasticSearch/index.js');
 const cluster = require('cluster');
 const os = require('os');
 
@@ -30,9 +29,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.post('/events', (req, res) => {
   if (Array.isArray(req.body)) {
     process.send(req.body);
-    model.createEvents(req.body)
+    model.createEvents(req.body, cluster.worker.id)
       .then((results) => {
-        elasticSearch.createEvents(results);
         res.status(201).end();
       })
       .catch((err) => {

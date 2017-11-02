@@ -1,7 +1,7 @@
 const request = require('request');
 const log = require('single-line-log').stdout;
 
-const TargetCount = 100;
+const TargetCount = 1000000;
 let count = 0;
 let userId = 0;
 let itemId = 0;
@@ -18,13 +18,18 @@ const generateData = () => {
   count++;
   userId++;
   itemId++;
-  date = new Date(date.getTime() + 80 * 1000);// add 80 seconds, make time goes
+  date = new Date(date.getTime() + 70 * 1000);// add 80 seconds, make time goes
   stash.push(postData);
 };
 
 let start = process.hrtime();
 
 const timeGoes = () => {
+  generateData();
+  generateData();
+  generateData();
+  generateData();
+  generateData();
   generateData();
   generateData();
   generateData();
