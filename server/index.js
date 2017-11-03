@@ -3,21 +3,28 @@ const model = require('../database/model.js')
 const bodyParser = require('body-parser');
 const cluster = require('cluster');
 const os = require('os');
+const AWS = require('aws-sdk');
+require('dotenv').config({path: '.env.dev'});
+
+AWS.config = new AWS.Config({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, 
+  region: process.env.AWS_REGION
+})
+const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
+const queueURL = process.env.INCOMING_QUEUE_URL;
 
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
   for (let i = 0; i < os.cpus().length; i++) {
     var worker = cluster.fork();
-    
     worker.on('message', function(message) {
       model.fillEventCache(message);
     });
   }
-
   cluster.on('exit', () => {
     cluster.fork();
   })
-
   return;
 }
 
@@ -52,7 +59,7 @@ app.get('/dailySummaries', (req, res) => {
   }
 });
 
-const port = 3000;
+const port = process.env.PORT||3000;
 
 app.listen(port, () => {
   console.log(`listening to port ${port} on worker${process.pid}`);
