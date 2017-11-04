@@ -26,53 +26,22 @@ AWS.config = new AWS.Config({
   region: process.env.AWS_REGION
 })
 const consumer = require('sqs-consumer');
-// const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
+const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
 const queueURL = process.env.INCOMING_QUEUE_URL;
-
-// var params = {
-//   AttributeNames: [
-//      "SentTimestamp"
-//   ],
-//   MaxNumberOfMessages: 1,
-//   MessageAttributeNames: [
-//      "All"
-//   ],
-//   QueueUrl: queueURL,
-  // VisibilityTimeout: 1,
-  // WaitTimeSeconds: 2
-//  };
- 
-//  sqs.receiveMessage(params, function(err, data) {
-//    if (err) {
-//      console.log("Receive Error", err);
-//    } else {
-//     console.log(data);
-//     if (data.Messages) {
-//       var deleteParams = {
-//         QueueUrl: queueURL,
-//         ReceiptHandle: data.Messages[0].ReceiptHandle
-//       };
-//       sqs.deleteMessage(deleteParams, function(err, data) {
-//         if (err) {
-//           console.log("Delete Error", err);
-//         } else {
-//           console.log("Message Deleted", data);
-//         }
-//       });
-//     }
-//    }
-//  });
 
 const sqsApp = consumer.create({
   queueUrl: queueURL,
   visibilityTimeout: 30,
-  waitTimeSeconds: 5,
   batchSize: 10,
+  waitTimeSeconds: 0,
   handleMessage: (message, done) => {
-    console.log(message, 'handled by worker', cluster.worker.id);
-    done();
+    process.send(JSON.parse(message.Body));
+    model.createEvents(JSON.parse(message.Body), cluster.worker.id)
+      .then(() => {
+        done();
+      })
   },
-  sqs: new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION })
+  sqs: sqs
 });
 
 sqsApp.on('message_received', (message) => {

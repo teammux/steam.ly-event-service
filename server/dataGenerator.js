@@ -12,73 +12,69 @@ const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
 const queueURL = process.env.INCOMING_QUEUE_URL;
 
 const TargetCount = 1000000;
+const SpeedLevel = 20;
 let count = 0;
+let failedCount = 0;
+
 let tempId = 0;
-let stash = [];
+let docStash = [];
+let messageStash = [];
 let date = new Date();
 
 const generateData = () => {
   let seed = Math.random();
-  let postData = { type: 'user_click' };
-  postData.is_recommended = seed >= 0.3 ? true : false;
-  postData.user_id = count;
-  postData.item_id = count;
-  postData.date = date;
+  let event = { type: 'user_click' };
+  event.is_recommended = seed >= 0.3 ? true : false;
+  event.user_id = count;
+  event.item_id = count;
+  event.date = date;
   count++;
   tempId++;
   date = new Date(date.getTime() + 70 * 1000);// add 80 seconds, make time goes
-  let messageEntry = {
-    Id: `${tempId}`, /* required */
-    MessageBody: JSON.stringify(postData), /* required */
-    DelaySeconds: 0,
-    MessageAttributes: {},
-    MessageDeduplicationId: `${count}`,
-    MessageGroupId: '1'
-  }
-  stash.push(messageEntry);
+  docStash.push(event);
 };
 
 let start = process.hrtime();
 
 const timeGoes = () => {
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  // generateData();
-  generateData();
-  log(`progress: ${count}/${TargetCount}`);
-  if (stash.length >= 10) {
-  //   let options = {
-  //     url: 'http://localhost:3000/events',
-  //     body: stash,
-  //     json: true
-  //   }
-  //   request.post(options, (err, res, body) => {
-  //     // console.log(res.statusCode);
-  //   });
-  //   stash = [];
-  // }
-
+  let counter = 0;
+  while (counter < SpeedLevel) {
+    generateData();
+    counter++;
+  }
+  log(`progress: ${count}/${TargetCount} failed: ${failedCount}`);
+  if (docStash.length >= 200) {
+    let messageEntry = {
+      Id: `${tempId}`,
+      MessageBody: JSON.stringify(docStash),
+      DelaySeconds: 0,
+      MessageAttributes: {},
+      MessageDeduplicationId: `${count}`,
+      MessageGroupId: '1'
+    }
+    messageStash.push(messageEntry);
+    docStash = [];
+  }
+  if (messageStash.length >= 10) {
     var params = {
-      Entries: stash,
+      Entries: messageStash,
       QueueUrl: queueURL /* required */
     };
     sqs.sendMessageBatch(params, function(err, data) {
-      if (err) console.log(err, err.stack); // an error occurred
-      else     console.log(data);           // successful response
+      if (err) {
+        console.log(err);
+      }
+      if (data) {
+        failedCount += data.Failed.length;
+      }
     });
-    stash = [];
+    messageStash = [];
     tempId = 0;
   }
   if (count < TargetCount) {
     setTimeout(() => {
       timeGoes()
-    }, 1);
+    }, 0);
   } else {
     log(`complete ${TargetCount} rows `)
     let finish = process.hrtime(start);
