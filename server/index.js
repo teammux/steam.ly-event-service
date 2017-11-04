@@ -6,14 +6,6 @@ const os = require('os');
 const AWS = require('aws-sdk');
 require('dotenv').config({path: '.env.dev'});
 
-AWS.config = new AWS.Config({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, 
-  region: process.env.AWS_REGION
-})
-const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
-const queueURL = process.env.INCOMING_QUEUE_URL;
-
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
   for (let i = 0; i < os.cpus().length; i++) {
@@ -27,6 +19,44 @@ if (cluster.isMaster) {
   })
   return;
 }
+
+AWS.config = new AWS.Config({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, 
+  region: process.env.AWS_REGION
+})
+const consumer = require('sqs-consumer');
+const sqs = new AWS.SQS({ apiVersion: process.env.AWS_SQS_API_VERSION });
+const queueURL = process.env.INCOMING_QUEUE_URL;
+
+const sqsApp = consumer.create({
+  queueUrl: queueURL,
+  visibilityTimeout: 30,
+  batchSize: 10,
+  waitTimeSeconds: 0,
+  handleMessage: (message, done) => {
+    process.send(JSON.parse(message.Body));
+    model.createEvents(JSON.parse(message.Body), cluster.worker.id)
+      .then(() => {
+        done();
+      })
+  },
+  sqs: sqs
+});
+
+sqsApp.on('message_received', (message) => {
+  // console.log(message, 'handled by worker');
+});
+
+sqsApp.on('processing_error', (err, message) => {
+  console.log('error when processing', message.MessageId, ':', err.message);
+});
+ 
+sqsApp.on('error', (err) => {
+  console.log(err.message);
+});
+ 
+sqsApp.start();
 
 const app = express();
 
