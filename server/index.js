@@ -89,6 +89,10 @@ app.get('/dailySummaries', (req, res) => {
   }
 });
 
+app.get('/hello', (req, res) => {
+  res.status(200).send('hello');
+});
+
 const port = process.env.PORT||3000;
 
 app.listen(port, () => {
