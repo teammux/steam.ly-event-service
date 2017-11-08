@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-require('dotenv').config({path: '.env.dev'});
+require('dotenv').config({path: '.env'});
 
 mongoose.connect(process.env.DB_URL, {
   useMongoClient: true

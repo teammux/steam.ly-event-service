@@ -1,10 +1,10 @@
 const elasticsearch = require('elasticsearch');
-require('dotenv').config({path: '.env.dev'});
+require('dotenv').config({path: '.env'});
 const esclient = new elasticsearch.Client({
   host: process.env.ELASTICSEARCH_HOST
 });
 
-const ENABLE_ELASTIC_SEARCH = false;
+const ENABLE_ELASTIC_SEARCH = true;
 const ELASTIC_SEARCH_BULK_THRESHOLD = 5000 * 2;// 1 doc takes 2 position
 
 const EventCacheMap = {

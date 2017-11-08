@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cluster = require('cluster');
 const os = require('os');
 const AWS = require('aws-sdk');
-require('dotenv').config({path: '.env.dev'});
+require('dotenv').config({path: '.env'});
 
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
