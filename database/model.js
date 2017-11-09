@@ -8,8 +8,7 @@ const EventMap = {
 };
 
 const EventCacheMap = {
-  'user_click': [],
-  workerId: null
+  'user_click': []
 };
 
 const DailySummaryMap = {
@@ -31,17 +30,6 @@ const fillEventCache = (events) => {
   for (let event of events) {
     EventCacheMap[event.type].push(event);
     checkDate(event.date);
-  }
-}
-
-const createEvent = (event, workerId) => {
-  EventCacheMap[event.type].push(event)
-  EventCacheMap.workerId = workerId;
-  if (EventCacheMap[event.type].length >= 50) {
-    createEvents(EventCacheMap[event.type], EventCacheMap.workerId)
-      .then()
-      .catch( err => console.log(err) );
-    EventCacheMap[event.type] = [];
   }
 }
 
@@ -90,7 +78,6 @@ const findDailySummary = (options) => {
 };
 
 module.exports = {
-  createEvent,
   createEvents,
   fillEventCache,
   findDailySummary

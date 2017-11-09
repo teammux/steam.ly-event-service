@@ -1,7 +1,7 @@
 const request = require('request');
 const log = require('single-line-log').stdout;
 const AWS = require('aws-sdk');
-require('dotenv').config({path: '.env.dev'});
+require('dotenv').config({path: '.env'});
 
 AWS.config = new AWS.Config({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID, 

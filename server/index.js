@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cluster = require('cluster');
 const os = require('os');
 const AWS = require('aws-sdk');
-require('dotenv').config({path: '.env.dev'});
+require('dotenv').config({path: '.env'});
 
 if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
@@ -87,6 +87,10 @@ app.get('/dailySummaries', (req, res) => {
   } else {
     res.status(400).end();
   }
+});
+
+app.get('/hello', (req, res) => {
+  res.status(200).send('hello');
 });
 
 const port = process.env.PORT||3000;
