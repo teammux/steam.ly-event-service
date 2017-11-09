@@ -4,7 +4,7 @@ const esclient = new elasticsearch.Client({
   host: process.env.ELASTICSEARCH_HOST
 });
 
-const ENABLE_ELASTIC_SEARCH = true;
+const ENABLE_ELASTIC_SEARCH = process.env.ENABLE_ELASTIC_SEARCH;
 const ELASTIC_SEARCH_BULK_THRESHOLD = 5000 * 2;// 1 doc takes 2 position
 
 const EventCacheMap = {
